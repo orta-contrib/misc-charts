@@ -1,0 +1,16 @@
+{
+  "name": "misc-charts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "server": "live-server /Users/nemotoyuusuke/go/src/github.com/orta-contrib/misc-charts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "live-server": "^1.2.1"
+  }
+}
