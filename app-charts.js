@@ -1,11 +1,8 @@
 var ctx = document.getElementById('myChart').getContext('2d');
 
-var icon1 = new Image(64, 64);
-icon1.src = "/sample-data/images/icon1.png";
-
 function toData(data, i) {
     var icon = new Image(64, 64);
-    icon.src = `/sample-data/images/icon${data[0]}.png`;
+    icon.src = `/misc-charts/sample-data/images/icon${data[0]}.png`;
     return {
         label: data[1],
         data: data[i],
@@ -24,7 +21,7 @@ function renderChart(arrays) {
     const labels = renderedData[0].map(d => d.label);
     const datasets = renderedData.map(data => {
         return {
-            label: 'test',
+            label: 'Chart',
             data: data.map(d => d.data),
             pointStyle: data.map(d => d.marker)
         };
@@ -39,6 +36,7 @@ function renderChart(arrays) {
             elements: {
                 line: {
                     tension: 0
+
                 }
             },
             scales: {
