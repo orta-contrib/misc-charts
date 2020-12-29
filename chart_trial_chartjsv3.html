@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>charts</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Chart</h1>
+            <canvas id="chart"></div>
+        </div>
+        <script type="module">
+            import DeposeChart from './deposeChart.js';
+            const chart = new DeposeChart(document.getElementById('chart'))
+            chart.render();
+            /*
+            const ctx = document.getElementById('chart');
+            const icon1 = new Image(64,64);
+            icon1.src = "/data/icons/1.png";
+            var stackedBar = new Chart(ctx, {
+                type: 'bar',
+                data:  {
+                    labels: ['man1', 'man2', 'man3'],
+                    datasets: [{
+                        type: 'line',
+                        data: [10, 20, 30],
+                        pointStyle: [icon1, icon1, icon1],
+                        backgroundColor: 'rgba(0,0,0,0)',
+                        borderColor: 'rgba(0,0,0,0)'
+
+                    }, {
+                        data: [[5, 10], [10,20], 30],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2',
+                            'rgba(54, 162, 235, 0.2',
+                            'rgba(255, 206, 86, 0.2'
+                        ],
+                        pointStyle: [icon1, icon1, icon1]
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        callbacks: {
+                            title: (tooltipItem) => {
+                                return tooltipItem[0].label; // TODO: キャラクター名
+                            },
+                            label: (tooltipItem) => {
+                                return ['foo', 'bar'];
+                            }
+                        }
+                    } 
+                }
+            });
+            */
+        </script>
+    </body>
+</html>
