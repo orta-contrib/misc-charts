@@ -103,8 +103,8 @@ class ChartModel {
 
         const labels = sheet.readAsDataset(this.labelRow, this.startCol);
         const datasets = [
-            {type: this.barChart.type, data: sheet.readAsDataset(this.barChart.row, this.startCol)},
-            {type: this.lineChart.type, data: sheet.readAsDataset(this.lineChart.row, this.startCol)}
+            {type: this.barChart.type, data: sheet.readAsDataset(this.barChart.row, this.startCol), backgroundColor: labels.map(this.stringToColor)},
+            {type: this.lineChart.type, data: sheet.readAsDataset(this.lineChart.row, this.startCol), backgroundColor: 'rgba(0,0,0,0)', borderColor: 'rgba(0,0,0,0.4)'}
         ];
         chart.render(labels, datasets);
 
@@ -118,4 +118,20 @@ class ChartModel {
             });
         });
     }
+
+    stringToColor(str) {
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+          hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        var color = "rgba(";
+        for (var i = 0; i < 3; i++) {
+            var value = (hash >> (i * 8)) & 0xFF;
+            color += value + ",";
+        }
+        color += "0.2)";
+        console.log(color);
+        return color;
+    };
+
 }
