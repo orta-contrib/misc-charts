@@ -8,23 +8,18 @@ class DataSheet {
         this.data = XLSX.utils.sheet_to_json(worksheet, {header: "A"});
     }
 
-    readAsDataset(rowNames, startCol) {
-        const dataToRender = [];
-        for (var i = 0; i < this.data.length; i++) {
-            if (typeof rowNames == 'string') {
-                dataToRender.push(this.data[i][rowNames]);
-            } else if (rowNames instanceof Array) {
-                const tmp = [];
-                for (var j = 0; j < rowNames.length; j++) {
-                    tmp.push(this.data[i][rowNames[j]]);
-                }
-                dataToRender.push(tmp);
-            } else {
-                dataToRender.push({});
-            }
+    fetchDataFunc(rowNames) {
+        if (typeof rowNames == 'string') {
+            return (col) => col[rowNames];
+        } else if (rowNames instanceof Array) {
+            return (col) => rowNames.map(row => col[row]);
+        } else {
+            return (col) => -1;
         }
-        dataToRender.splice(0, startCol);
-        return dataToRender;
+    }
+    
+    readAsDataset(rowNames, startCol) {
+        return this.data.slice(startCol).map(this.fetchDataFunc(rowNames));
     }
 
     loadIconImage(url) {
@@ -62,10 +57,9 @@ class ChartModel {
 
         const labels = sheet.readAsDataset(this.labelRow, this.startCol);
         const datasets = this.renderRows.map(rrow => {
-            const dataToRender = sheet.readAsDataset(rrow.row, this.startCol);
             return {
                 type: rrow.type,
-                data: dataToRender
+                data: sheet.readAsDataset(rrow.row, this.startCol)
             };
         });
         chart.render(labels, datasets);
