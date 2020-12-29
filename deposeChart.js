@@ -2,14 +2,6 @@ class DeposeChart {
     constructor(ctx) {
         // Initialize chart. Must specify chart type here (, or error will throw).
         this.chart = new Chart(ctx, {type: 'bar'});
-
-        // TODO: Read icon
-        const icon1 = new Image(48,48);
-        icon1.src = "/data/icons/2.png";
-        this.chart.data = {
-            labels: Array.from({length: 100}, () => 'man'),
-            datasets: []
-        }
     };
 
     render(labels, dataset) {

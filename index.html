@@ -32,15 +32,6 @@
                 return colour;
             };
 
-            const loadIcon = (src) => {
-                return new Promise((resolve, reject) => {
-                    const icon = new Image(48,48);
-                    icon.onload = () => resolve(icon);
-                    icon.onerror = (e) => reject(e);
-                    icon.src = src;
-                });
-            }
-
             const ctx = document.getElementById('chart');
             const chart = new DeposeChart(ctx);
             const chartModel = new ChartModel();
