@@ -17,7 +17,7 @@ class DataSheet {
             return (col) => -1;
         }
     }
-    
+
     readAsDataset(rowNames, startCol) {
         return this.data.slice(startCol).map(this.fetchDataFunc(rowNames));
     }
@@ -32,6 +32,7 @@ class DataSheet {
             icon.src = url;
         })
     }
+
     async readAsIconDataset(rowName, startCol) {
         return this.data.slice(startCol).map(async col => {
             return await this.loadIconImage(`/data/icons/${col[rowName]}.png`);

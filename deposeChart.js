@@ -16,17 +16,6 @@ class DeposeChart {
         this.chart.data.labels = labels;
         this.chart.data.datasets = this.chart.data.datasets.concat(dataset);
         this.chart.options = {
-            tooltips: {
-                callbacks: {
-                    title: (tooltipItem) => {
-                        return tooltipItem[0].label; // TODO: キャラクター名
-                    },
-                    label: (tooltipItem) => {
-                        return ['foo', 'bar'];
-                    }
-                }
-            },
-            responsive: true,
             maintainAspectRatio: false
         };
         this.chart.canvas.parentNode.style.width = (48 * this.chart.data.labels.length) + 'px';

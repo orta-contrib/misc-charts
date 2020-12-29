@@ -19,6 +19,10 @@
 v3からesm(ES Module)形式でも利用可能になり、クラスベースでコードを書けるようになるが、2020/12現在ベータ版であり、情報もなくうまく動かせなかったので利用は保留。(`XXXController`など、必要な要素を`Chart.register(...)`で登録していかなくてはならないが、何を登録すべきか全くわからなかった)
 とりあえずはプロトタイプベースでclass化して作っていく。v3が使えそうなら移行する。
 
+#### tooltip
+* Tooltipに追加情報を表示することもできそうだが、表示項目名を指定する方法が思いつかないため保留
+
+
 ### エラー
 
 #### (SheetJS) Uncaught (in promise) Error: Cannot find file [Content_Types].xml in zip
