@@ -5,7 +5,7 @@ class DeposeChart {
     };
 
     render(labels, datasets) {
-        this.chart.data.labels = labels;
+        this.chart.data.labels = labels.map(l => ['  '].concat(l.split(''))); // Hack for adjusting ticks (x-axis label)
         this.chart.data.datasets = datasets;
         this.chart.options = {
             maintainAspectRatio: false
