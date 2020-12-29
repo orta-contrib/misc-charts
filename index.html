@@ -12,10 +12,14 @@
             <div class="pure-g">
                 <div class="pure-u-1-24"></div>
                 <div class="pure-u-22-24">
-                    <h1>Chart</h1>
-                    <input type="file" id="file">
+                    <div class="button-wrapper">
+                        <span class="label">
+                            Upload .xlsx file
+                        </span>
+                        <input type="file" id="upload" name="upload" class="upload-box" placeholder="Upload .xlsx File">
+                    </div>
                     <div style="overflow-x: auto">
-                        <div style="height: 70vh; width: 80vw;">
+                        <div style="height: 85vh; width: 80vw;">
                             <canvas id="chart" style="width: 0;"></canvas>
                         </div>
                     </div>
@@ -111,7 +115,7 @@
                 reader.readAsArrayBuffer(file);
             }
             // TODO: Change 'change' event listener
-            document.getElementById("file").addEventListener("change", handleFile, false);
+            document.getElementById("upload").addEventListener("change", handleFile, false);
         </script>
     </body>
 </html>
