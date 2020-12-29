@@ -1,0 +1,133 @@
+:root {
+  --white: white;
+  --gradient: linear-gradient(-45deg, #00a6ff 0%, #035eff 50%);
+  --form: #eeefef;
+  --border-radius: 4px;
+  --form-width: 400px;
+  --form-mob-width: 320px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+button,
+label {
+  cursor: pointer;
+}
+
+label {
+  display: block;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  border: none;
+}
+
+textarea {
+  resize: none;
+}
+
+[type="checkbox"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.feedback-label,
+.form {
+  position: fixed;
+  top: 35%;
+  right: 0;
+  backface-visibility: hidden;
+}
+
+.feedback-label {
+  transform-origin: top right;
+  transform: rotate(-90deg) translate(50%, -100%);
+  z-index: 2;
+}
+
+.form {
+  width: var(--form-width);
+  max-height: 90vh;
+  transform: translate(100%, -50%);
+  padding: 15px;
+  overflow: auto;
+  background: var(--form);
+  z-index: 1;
+}
+
+.feedback-label,
+.form input,
+.form textarea,
+.form button {
+  border-radius: var(--border-radius);
+}
+
+.feedback-label,
+.form button {
+  background: var(--gradient);
+  color: var(--white);
+}
+
+.feedback-label:hover,
+.form button:hover {
+  filter: hue-rotate(-45deg);
+}
+
+.feedback-label {
+  padding: 5px 10px;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+form div:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+form div:last-child {
+  text-align: right;
+}
+
+.form input,
+.form textarea {
+  padding: 0 5px;
+  width: 100%;
+}
+
+.form button {
+  padding: 10px 20px;
+  width: 50%;
+  max-width: 120px;
+}
+
+.form input {
+  height: 40px;
+}
+
+.form textarea {
+  height: 220px;
+}
+
+[type="checkbox"]:checked + .feedback-label {
+  transform: rotate(-90deg)
+    translate(50%, calc((var(--form-width) + 100%) * -1));
+}
+
+[type="checkbox"]:focus + .feedback-label {
+  outline: 2px solid rgb(77, 144, 254);
+}
+
+[type="checkbox"]:checked ~ .form {
+  transform: translate(0, -50%);
+}
+
+.feedback-label,
+.form {
+  transition: all 0.35s ease-in-out;
+}

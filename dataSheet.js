@@ -4,8 +4,34 @@ class DataSheet {
         if (!sheetName) {
             sheetName = workbook.SheetNames[0];
         }
-        const worksheet = workbook.Sheets[sheetName];
-        this.data = XLSX.utils.sheet_to_json(worksheet, {header: "A"});
+        this.worksheet = workbook.Sheets[sheetName];
+        this.data = XLSX.utils.sheet_to_json(this.worksheet, {header: "A"});
+    }
+
+    getRows() {
+        const elems = this.worksheet['!ref'].split(':')
+        if (elems.length != 2) {
+            return [];
+        }
+        const range = (start, end) => [...Array((end-start) + 1)].map((_, i) => start + i);
+
+        const start = elems[0].replace( /\d+/g, ''); // A1 -> A
+        const end = elems[1].replace( /\d+/g, '');
+        if (end.length == 1) {
+            return range(start.charCodeAt(0), end.charCodeAt(0)).map(i => String.fromCharCode(i));
+        }
+        const ret = range(start.charCodeAt(0), 'Z'.charCodeAt(0)).map(i => String.fromCharCode(i));
+        const alphabets = range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1).map(i => String.fromCharCode(i));
+        for (var i = 0; i < alphabets.length; i++) {
+            for (var j = 0; j < alphabets.length; j++) {
+                const row = alphabets[i] + alphabets[j];
+                ret.push(row);            
+                if (row === end) {
+                    return ret;
+                }
+            }
+        }
+        return ret;
     }
 
     fetchDataFunc(rowNames) {
@@ -41,15 +67,34 @@ class DataSheet {
 }
 
 class ChartModel {
-    constructor() {
-        // TODO: parameterize
-        this.iconRow = "A";
-        this.labelRow = "C";
-        this.renderRows = [
-            {type: "bar", row: ["BS", "BU"]},
-            {type: "line", row: "BT"}
-        ];
+    constructor(settings) {
+        if (!settings) {
+            settings = this.getDefaultSettings();
+        }
+        this.iconRow = settings.icon;
+        this.labelRow = settings.name;
+        this.barChart = {type: "bar", row: [settings.barMin, settings.barMax]};
+        this.lineChart = {type: "line", row: settings.line};
         this.startCol = 4;
+    }
+    getDefaultSettings() {
+        return {
+            icon: "A",
+            name: "C",
+            barMin: "BS",
+            barMax: "BU",
+            line:"BT"
+        }
+    }
+
+    toJSON() {
+        return {
+            icon: this.iconRow,
+            label: this.labelRow,
+            barChart: this.barChart.row,
+            lineChart: this.lineChart.row,
+            startCol: this.startCol
+        };
     }
 
     async render(chart, sheet) {
@@ -57,12 +102,10 @@ class ChartModel {
         chart.clear();
 
         const labels = sheet.readAsDataset(this.labelRow, this.startCol);
-        const datasets = this.renderRows.map(rrow => {
-            return {
-                type: rrow.type,
-                data: sheet.readAsDataset(rrow.row, this.startCol)
-            };
-        });
+        const datasets = [
+            {type: this.barChart.type, data: sheet.readAsDataset(this.barChart.row, this.startCol)},
+            {type: this.lineChart.type, data: sheet.readAsDataset(this.lineChart.row, this.startCol)}
+        ];
         chart.render(labels, datasets);
 
         // Icons will renader after rendering charts, because loading icons would take time 

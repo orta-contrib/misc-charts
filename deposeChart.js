@@ -4,9 +4,9 @@ class DeposeChart {
         this.chart = new Chart(ctx, {type: 'bar'});
     };
 
-    render(labels, dataset) {
+    render(labels, datasets) {
         this.chart.data.labels = labels;
-        this.chart.data.datasets = this.chart.data.datasets.concat(dataset);
+        this.chart.data.datasets = datasets;
         this.chart.options = {
             maintainAspectRatio: false
         };

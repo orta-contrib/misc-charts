@@ -2,19 +2,53 @@
 <html>
     <head>
         <title>charts</title>
-        <!-- TODO: change to .min.js -->
-        <script lang="javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="./style.css">
+        <script lang="javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script lang="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     </head>
     <body>
-        <div class="container">
-            <h1>Chart</h1>
-            <input type='file' name='file' id='file'>
-            <div style="overflow-x: scroll">
-                <div style="height: 70vh; width: 80vw;">
-                    <canvas id="chart" style="width: 0;"></canvas>
+        <div class="wrapper">
+            <div class="pure-g">
+                <div class="pure-u-1-24"></div>
+                <div class="pure-u-22-24">
+                    <h1>Chart</h1>
+                    <input type="file" id="file">
+                    <div style="overflow-x: auto">
+                        <div style="height: 70vh; width: 80vw;">
+                            <canvas id="chart" style="width: 0;"></canvas>
+                        </div>
+                    </div>
                 </div>
+                <div class="pure-u-1-24"></div>
             </div>
+            <input type="checkbox" id="mycheckbox">
+            <label for="mycheckbox" class="feedback-label">SETTINGS</label>
+            <form class="form pure-form pure-form-aligned">
+                <fieldset>
+                    <div class="pure-control-group">
+                        <label for="aligned-name">ID Row</label>
+                        <select id="form-select-id-row"></select>
+                    </div>
+                    <div class="pure-control-group">
+                        <label for="aligned-name">Name Row</label>
+                        <select id="form-select-name-row"></select>
+                    </div>
+                    <div class="pure-control-group">
+                        <label for="aligned-name">Chart(Bar)</label>
+                        <select id="form-bar-min-row"></select>
+                        ~
+                        <select id="form-bar-max-row"></select>
+                    </div>
+                    <div class="pure-control-group">
+                        <label for="aligned-name">Chart(Line)</label>
+                        <select id="form-line-row"></select>
+                    </div>
+                    <div class="pure-control-group">
+                        <button type="submit" id="update-button" class="pure-button pure-button-primary">Update</button>
+                    </div>
+                </fieldset>
+            </form>
         </div>
         <script lang="javascript" src="./deposeChart.js"></script>
         <script lang="javascript" src="./dataSheet.js"></script>
@@ -31,14 +65,52 @@
                 }
                 return colour;
             };
+            const selectIds = ["form-select-id-row", "form-select-name-row", "form-bar-min-row", "form-bar-max-row", "form-line-row"];
+            const setRowOptionsToSelect = (rows) => {
+                selectIds.forEach(id => {
+                    const selectBox = document.getElementById(id);
+                    const len = selectBox.options.length;
+                    for (var i = len; i >= 0; i--) {
+                        selectBox.remove(i);
+                    }
+                    rows.forEach(r => {
+                        const opt = document.createElement("option");
+                        opt.text = r; opt.value = r;
+                        selectBox.appendChild(opt);
+                    });
+                    selectBox.selectedIndex = 0;
+                });
+            };
+            document.getElementById("update-button").addEventListener("click", (e) => {
+                e.preventDefault()
+                const setting = {
+                    icon: document.getElementById("form-select-id-row").value,
+                    name: document.getElementById("form-select-name-row").value,
+                    barMin: document.getElementById("form-bar-min-row").value,
+                    barMax: document.getElementById("form-bar-max-row").value,
+                    line: document.getElementById("form-line-row").value
+                }
+                chartModel = new ChartModel(setting);
+                chartModel.render(chart, sheet);
+            });
 
             const ctx = document.getElementById('chart');
             const chart = new DeposeChart(ctx);
-            const chartModel = new ChartModel();
+            var chartModel = new ChartModel(null);
+            var sheet = null;
 
             const readSheet = (event) => {
                 const dataArray = new Uint8Array(event.target.result);
-                const sheet = new DataSheet(dataArray);
+                sheet = new DataSheet(dataArray);
+                const rowLabelArray = sheet.getRows();
+                setRowOptionsToSelect(rowLabelArray);
+                const json = chartModel.toJSON();
+                document.getElementById("form-select-id-row").selectedIndex = rowLabelArray.indexOf(json.icon);
+                document.getElementById("form-select-name-row").selectedIndex = rowLabelArray.indexOf(json.label);
+                document.getElementById("form-bar-min-row").selectedIndex = rowLabelArray.indexOf(json.barChart[0]);
+                document.getElementById("form-bar-max-row").selectedIndex = rowLabelArray.indexOf(json.barChart[1]);
+                document.getElementById("form-line-row").selectedIndex = rowLabelArray.indexOf(json.lineChart);
+
                 chartModel.render(chart, sheet);
                 // TODO: notify to finish reading
             }
