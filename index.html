@@ -1,22 +1,66 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>charts</title>
+        <!-- TODO: change to .min.js -->
+        <script lang="javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.js"></script>
+        <script lang="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Chart</h1>
+            <input type='file' name='file' id='file'>
+            <div style="overflow-x: scroll">
+                <div style="height: 70vh; width: 80vw;">
+                    <canvas id="chart" style="width: 0;"></canvas>
+                </div>
+            </div>
+        </div>
+        <script lang="javascript" src="./deposeChart.js"></script>
+        <script lang="javascript" src="./dataSheet.js"></script>
+        <script lang="javascript">
+            const stringToColour = (str) => {
+                var hash = 0;
+                for (var i = 0; i < str.length; i++) {
+                  hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                var colour = '#';
+                for (var i = 0; i < 3; i++) {
+                    var value = (hash >> (i * 8)) & 0xFF;
+                    colour += ('00' + value.toString(16)).substr(-2);
+                }
+                return colour;
+            };
 
-<head>
-    <title>charts</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-</head>
+            const loadIcon = (src) => {
+                return new Promise((resolve, reject) => {
+                    const icon = new Image(48,48);
+                    icon.onload = () => resolve(icon);
+                    icon.onerror = (e) => reject(e);
+                    icon.src = src;
+                });
+            }
 
-<body>
-    <h1>Charts</h1>
-    <div id="select-file">
-        <input type="file" id="input">
-    </div>
-    <div id="data-selector"></div>
-    <div style="position: relative; height: 50vh; width: 90vw">
-        <canvas id="myChart"></canvas>
-    </div>
-    <script type="text/javascript" src="papaparse.min.js"></script>
-    <script type="text/javascript" src="app-charts.js"></script>
-</body>
+            const ctx = document.getElementById('chart');
+            const chart = new DeposeChart(ctx);
+            const chartModel = new ChartModel();
 
+            const readSheet = (event) => {
+                const dataArray = new Uint8Array(event.target.result);
+                const sheet = new DataSheet(dataArray);
+                chartModel.render(chart, sheet);
+                // TODO: notify to finish reading
+            }
+
+            const handleFile = (event) => {
+                // TODO: notify to start reading
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = readSheet;
+                reader.readAsArrayBuffer(file);
+            }
+            // TODO: Change 'change' event listener
+            document.getElementById("file").addEventListener("change", handleFile, false);
+        </script>
+    </body>
 </html>
